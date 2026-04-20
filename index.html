@@ -180,7 +180,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .book-meta { border-top: 1px solid var(--dark2); padding-top: 28px; display: flex; flex-direction: column; gap: 14px; }
 .book-meta-row { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--dim); }
 .book-meta-row svg { color: rgba(201,168,76,.5); flex-shrink: 0; }
-@media (max-width: 900px) { .book-layout { grid-template-columns: 1fr; gap: 48px; } .book-info { position: static; } #book { padding: 64px 20px; } }
+@media (max-width: 900px) { .book-layout { grid-template-columns: 1fr; gap: 48px; } .book-info { position: static; order: 2; } #wizard { order: 1; } #book { padding: 64px 20px; } }
 
 /* ── WIZARD ───────────────────────────────────────────────────────── */
 .wiz-steps { display: flex; align-items: center; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; }
@@ -435,7 +435,6 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
     Luxury Barber
   </a>
   <div class="nav-links">
-    <button onclick="$id('services').scrollIntoView({behavior:'smooth'})">Services</button>
     <button onclick="$id('book').scrollIntoView({behavior:'smooth'})">Book</button>
     <button onclick="openAdminLogin()">Admin</button>
   </div>
@@ -456,7 +455,6 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
     <p class="hero-desc">Premium grooming services delivered with precision and care. Every visit is an experience crafted exclusively for you.</p>
     <div class="hero-ctas">
       <button class="btn-gold" onclick="$id('book').scrollIntoView({behavior:'smooth'})">Reserve Your Seat</button>
-      <button class="btn-outline" onclick="$id('services').scrollIntoView({behavior:'smooth'})">Our Services</button>
     </div>
     <div class="hero-proof">
       <div><span class="stars">★★★★★</span>&nbsp; 5.0 on Google</div>
@@ -468,19 +466,6 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
     <span>Scroll</span>
     <div class="scroll-cue-line"></div>
   </div>
-</section>
-
-<!-- ══ SERVICES PREVIEW ══════════════════════════════════════════════ -->
-<section id="services">
-  <div class="section-head reveal">
-    <div class="sep">
-      <div class="gold-line"></div>
-      <span class="label">Our Services</span>
-      <div class="gold-line"></div>
-    </div>
-    <h2 class="section-title serif">Curated Experiences</h2>
-  </div>
-  <div class="svc-grid reveal" id="svc-preview"></div>
 </section>
 
 <!-- ══ BOOKING ════════════════════════════════════════════════════════ -->
@@ -889,22 +874,6 @@ function resetWiz() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SERVICES PREVIEW
-═══════════════════════════════════════════════════════════ */
-function renderSvcPreview() {
-  $id('svc-preview').innerHTML = SERVICES.map((s,i) => `
-    <div class="svc-card" onclick="$id('book').scrollIntoView({behavior:'smooth'});setTimeout(()=>pickService('${s.id}'),400)">
-      <div class="svc-top">
-        <span class="svc-num">0${i+1}</span>
-        <span class="svc-price">$${s.price}</span>
-      </div>
-      <div class="svc-name">${s.name}</div>
-      <div class="svc-desc">${s.desc}</div>
-      <div class="svc-foot"><span class="dot"></span>${s.dur} minutes</div>
-    </div>`).join('');
-}
-
-/* ═══════════════════════════════════════════════════════════
    ADMIN
 ═══════════════════════════════════════════════════════════ */
 function openAdminLogin() {
@@ -991,7 +960,6 @@ function initReveal() {
    INIT
 ═══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  renderSvcPreview();
   renderWiz();
   initReveal();
 });
