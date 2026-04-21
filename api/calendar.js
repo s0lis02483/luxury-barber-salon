@@ -206,24 +206,60 @@ function buildEmail({ name, serviceName, date, time, price, duration, lang }) {
 }
 
 async function sendConfirmationEmail({ name, email, serviceName, date, time, price, duration, lang }) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey   = process.env.RESEND_API_KEY;
+  const fromAddr = process.env.RESEND_FROM || 'onboarding@resend.dev';
+
   if (!apiKey) {
     console.warn('[email] RESEND_API_KEY not set — skipping email');
     return;
   }
+
   const resend = new Resend(apiKey);
   const { subject, html } = buildEmail({ name, serviceName, date, time, price, duration, lang });
+
+  // ── Send to customer ─────────────────────────────────────────────
+  // Requires RESEND_FROM to be a verified sender on resend.com.
+  // With the sandbox sender (onboarding@resend.dev) this will only
+  // work if `email` matches your Resend account address.
   try {
-    await resend.emails.send({
-      from:    'onboarding@resend.dev',
+    const result = await resend.emails.send({
+      from:    fromAddr,
       to:      email,
       subject,
       html,
     });
-    console.log(`[email] Sent confirmation to ${email}`);
+    if (result.error) throw new Error(JSON.stringify(result.error));
+    console.log(`[email] ✓ Confirmation sent to customer: ${email}`);
   } catch (err) {
-    // Email failure must never break the booking — log and continue
-    console.error('[email] Send failed:', err.message);
+    console.error('[email] ✗ Customer email failed:', err.message);
+
+    // ── Fallback: notify salon owner instead ─────────────────────
+    // If SALON_EMAIL is set, forward the booking details to the owner
+    // so at least someone knows about the new reservation.
+    const ownerEmail = process.env.SALON_EMAIL;
+    if (ownerEmail && ownerEmail !== email) {
+      try {
+        const isSl = lang !== 'en';
+        const ownerSubject = isSl
+          ? `Nova rezervacija: ${name} — ${serviceName}`
+          : `New booking: ${name} — ${serviceName}`;
+        const ownerHtml = html.replace(
+          isSl ? 'Vaša rezervacija je potrjena' : 'Your appointment is confirmed',
+          isSl
+            ? `<span style="color:#f87171">Obvestilo lastniku — email stranki ni bil dostavljan</span><br>Nova rezervacija: ${name} &lt;${email}&gt;`
+            : `<span style="color:#f87171">Owner notification — customer email could not be delivered</span><br>New booking: ${name} &lt;${email}&gt;`,
+        );
+        await resend.emails.send({
+          from:    fromAddr,
+          to:      ownerEmail,
+          subject: ownerSubject,
+          html:    ownerHtml,
+        });
+        console.log(`[email] ✓ Owner fallback notification sent to: ${ownerEmail}`);
+      } catch (ownerErr) {
+        console.error('[email] ✗ Owner fallback also failed:', ownerErr.message);
+      }
+    }
   }
 }
 
