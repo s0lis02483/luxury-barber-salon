@@ -698,6 +698,8 @@ const S = {
   bookings: JSON.parse(localStorage.getItem('lbs') || '[]'),
   done:     null,
   admFilt:  'all',
+  calBusy:  {},        // { 'YYYY-MM-DD': ['HH:MM', ...] } — slots blocked on Google Calendar
+  loadingSlots: false, // true while fetching availability from /api/calendar
 };
 
 const $id = id => document.getElementById(id);
@@ -798,7 +800,10 @@ function allSlots() {
 }
 
 function bookedOn(date) {
-  return new Set(S.bookings.filter(b => b.date === date && b.status === 'confirmed').map(b => b.time));
+  // Merge Google Calendar busy slots with any locally-stored confirmed bookings
+  const calSet   = new Set(S.calBusy[date] || []);
+  const localSet = new Set(S.bookings.filter(b => b.date === date && b.status === 'confirmed').map(b => b.time));
+  return new Set([...calSet, ...localSet]);
 }
 
 function weekDays() {
@@ -889,12 +894,15 @@ function renderDateTimeStep() {
     </div>
     ${S.date ? `
       <div class="slots-lbl">${l.avail}</div>
-      <div class="slots-grid">
-        ${slots.map(sl => `
-          <button class="slot${S.time===sl.time?' sel':''}" ${taken.has(sl.time)?'disabled':''} onclick="pickTime('${sl.time}')">
-            ${sl.label}
-          </button>`).join('')}
-      </div>` : ''}
+      ${S.loadingSlots
+        ? '<div style="padding:22px 0;text-align:center"><span class="spin" style="width:18px;height:18px;border-width:2px"></span></div>'
+        : `<div class="slots-grid">
+            ${slots.map(sl => `
+              <button class="slot${S.time===sl.time?' sel':''}" ${taken.has(sl.time)?'disabled':''} onclick="pickTime('${sl.time}')">
+                ${sl.label}
+              </button>`).join('')}
+           </div>`
+      }` : ''}
     ${S.service && S.date && S.time ? `
       <div class="bsum">
         <div>
@@ -983,7 +991,27 @@ function pickService(id) {
   S.service = { ...SERVICES[idx] };
   renderWiz();
 }
-function pickDate(d) { S.date = d; S.time = null; renderWiz(); }
+async function pickDate(d) {
+  S.date = d; S.time = null;
+  // Fetch availability from Google Calendar if we haven't cached this date yet
+  if (!S.calBusy[d]) {
+    S.loadingSlots = true;
+    renderWiz(); // show spinner immediately
+    try {
+      const r = await fetch(`/api/calendar?date=${d}`);
+      if (r.ok) {
+        const data = await r.json();
+        S.calBusy[d] = (data.slots || []).filter(s => s.busy).map(s => s.time);
+      }
+    } catch (e) {
+      // API unavailable (local file open, env vars not set, etc.) — fall back to localStorage only
+      console.warn('[calendar] GET failed, using local data only:', e.message);
+      S.calBusy[d] = []; // cache empty so we don't retry on re-click
+    }
+    S.loadingSlots = false;
+  }
+  renderWiz();
+}
 function pickTime(tm) { S.time = tm; renderWiz(); }
 function prevWk() { if (S.wkOff > 0) { S.wkOff--; renderWiz(); } }
 function nextWk() { S.wkOff++; renderWiz(); }
@@ -1008,23 +1036,49 @@ function validate() {
   return ok;
 }
 
-function submitBooking() {
+async function submitBooking() {
   if (!validate()) return;
+  // Quick local conflict check before hitting the API
   const conflict = S.bookings.find(b => b.date===S.date && b.time===S.time && b.status==='confirmed');
   if (conflict) {
     const g=$id('gerr'); g.textContent=t().errSlot; g.style.display='block'; return;
   }
+
   const btn = $id('sub-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
-  setTimeout(() => {
-    const booking = {
-      id: uid(), name: S.name.trim(), email: S.email.trim().toLowerCase(),
-      service: S.service.id, date: S.date, time: S.time, price: S.service.price,
-      status: 'confirmed', createdAt: new Date().toISOString(),
-    };
-    S.bookings.push(booking); save();
-    S.done = booking; S.step = 'confirmed'; renderWiz();
-  }, 480);
+
+  const idx = svcByIdIdx(S.service.id);
+  const booking = {
+    id: uid(), name: S.name.trim(), email: S.email.trim().toLowerCase(),
+    service: S.service.id, date: S.date, time: S.time, price: S.service.price,
+    status: 'confirmed', createdAt: new Date().toISOString(),
+  };
+
+  // Create event on Google Calendar (non-blocking — if it fails we still confirm locally)
+  try {
+    const r = await fetch('/api/calendar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: booking.name, email: booking.email,
+        service: S.service.id, serviceName: svcName(idx),
+        date: S.date, time: S.time,
+        price: S.service.price, duration: S.service.dur,
+      }),
+    });
+    if (r.ok) {
+      const data = await r.json();
+      booking.calEventId = data.eventId; // store for reference
+    }
+  } catch (e) {
+    console.warn('[calendar] POST failed, booking saved locally only:', e.message);
+  }
+
+  // Invalidate the cache for this date so next visitor sees updated availability
+  delete S.calBusy[S.date];
+
+  S.bookings.push(booking); save();
+  S.done = booking; S.step = 'confirmed'; renderWiz();
 }
 
 function resetWiz() {
