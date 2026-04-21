@@ -186,7 +186,7 @@ function buildEmail({ name, serviceName, date, time, price, duration, lang }) {
     <!-- address -->
     <tr><td style="padding:20px 0;text-align:center;">
       <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.8;color:#444;">
-        123 Luxury Avenue, New York, NY<br>+1 (555) 000-0000
+        Slovenska cesta 15, 1000 Ljubljana<br>+386 31 456 789
       </p>
     </td></tr>
 

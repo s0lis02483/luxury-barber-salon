@@ -432,11 +432,11 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
         </div>
         <div class="book-meta-row">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          123 Luxury Avenue, New York, NY
+          Slovenska cesta 15, 1000 Ljubljana
         </div>
         <div class="book-meta-row">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 6c1.53 2.68 3.73 4.88 6.41 6.41l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          +1 (555) 000-0000
+          +386 31 456 789
         </div>
       </div>
     </div>
@@ -677,12 +677,12 @@ const T = {
    BASE SERVICE DATA (lang-independent)
 ═══════════════════════════════════ */
 const SERVICES = [
-  { id:'classic-cut',   dur:45,  price:45  },
-  { id:'luxury-shave',  dur:60,  price:55  },
-  { id:'cut-and-beard', dur:75,  price:85  },
-  { id:'hot-towel',     dur:30,  price:35  },
-  { id:'premium-style', dur:60,  price:75  },
-  { id:'color-style',   dur:120, price:120 },
+  { id:'classic-cut',   dur:45,  price:18  },
+  { id:'luxury-shave',  dur:60,  price:22  },
+  { id:'cut-and-beard', dur:75,  price:32  },
+  { id:'hot-towel',     dur:30,  price:12  },
+  { id:'premium-style', dur:60,  price:28  },
+  { id:'color-style',   dur:120, price:55  },
 ];
 
 /* ═══════════════════════════════════
@@ -856,7 +856,7 @@ function renderServiceStep() {
           <div class="od">${svcDesc(i)}</div>
           <div class="om">
             <span class="odur">⏱ ${sv.dur} min</span>
-            <span class="oprice">$${sv.price}</span>
+            <span class="oprice">€${sv.price}</span>
           </div>
         </button>`).join('')}
     </div>
@@ -913,7 +913,7 @@ function renderDateTimeStep() {
           <div class="bs-name">${svcName(svcByIdIdx(S.service.id))}</div>
           <div class="bs-when">${shortDate(S.date)} · ${fmtTime(S.time)}</div>
         </div>
-        <div class="bs-price">$${S.service.price}</div>
+        <div class="bs-price">€${S.service.price}</div>
       </div>` : ''}
     <div class="form-actions">
       <button class="btn-ghost" onclick="goBack()">${l.btnBack}</button>
@@ -968,7 +968,7 @@ function renderConfirmStep() {
     <h2 class="confirm-h serif">${l.confH}</h2>
     <p class="confirm-sub">${l.confSub} <span>${b.email}</span></p>
     <div class="confirm-tbl">
-      ${[[l.crName,b.name],[l.crSvc,nm],[l.crDate,fmtDate(b.date)],[l.crTime,fmtTime(b.time)],[l.crPrice,'$'+b.price]]
+      ${[[l.crName,b.name],[l.crSvc,nm],[l.crDate,fmtDate(b.date)],[l.crTime,fmtTime(b.time)],[l.crPrice,'€'+b.price]]
         .map(([lb,v]) => `<div class="confirm-row"><span class="cr-lbl">${lb}</span><span class="cr-val">${v}</span></div>`)
         .join('')}
     </div>
@@ -1148,7 +1148,7 @@ function renderAdmStats() {
     { lbl:l.statTotal, val:bs.length,                                   cls:''      },
     { lbl:l.statConf,  val:conf.length,                                  cls:'green' },
     { lbl:l.statToday, val:conf.filter(b=>b.date===today).length,        cls:'gold'  },
-    { lbl:l.statRev,   val:'$'+conf.reduce((s,b)=>s+b.price,0),          cls:'gold'  },
+    { lbl:l.statRev,   val:'€'+conf.reduce((s,b)=>s+b.price,0),          cls:'gold'  },
   ].map(x=>`<div class="stat-box"><div class="stat-lbl">${x.lbl}</div><div class="stat-val ${x.cls}">${x.val}</div></div>`).join('');
 }
 
@@ -1176,7 +1176,7 @@ function renderAdmTable() {
       <td>${nm}</td>
       <td>${shortDate(b.date)}</td>
       <td>${fmtTime(b.time)}</td>
-      <td>$${b.price}</td>
+      <td>€${b.price}</td>
       <td><span class="status-badge ${b.status}"><span class="sdot"></span>${statusLabel}</span></td>
       <td>${b.status==='confirmed'?`<button class="btn-danger" onclick="cancelBooking('${b.id}')">${l.admCanc}</button>`:''}</td>
     </tr>`;
