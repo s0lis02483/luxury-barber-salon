@@ -1,15 +1,16 @@
 /**
- * api/calendar.js — Luxury Barber Salon · Google Calendar integration
+ * api/calendar.js — Luxury Barber Salon · Google Calendar + Resend email
  *
  * GET  /api/calendar?date=YYYY-MM-DD
  *   → { date, slots: [{ time:'HH:MM', busy:bool }, ...] }
  *
  * POST /api/calendar
- *   Body: { name, email, service, serviceName, date, time, price, duration }
+ *   Body: { name, email, service, serviceName, date, time, price, duration, lang }
  *   → { eventId, eventLink, message }
  */
 
 const { google } = require('googleapis');
+const { Resend }  = require('resend');
 
 const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
 const TIMEZONE    = 'Europe/Ljubljana';
@@ -81,6 +82,151 @@ function generateSlots() {
   return slots;
 }
 
+/* ── Email ────────────────────────────────────────────────────────── */
+
+function fmtDateLong(dateStr, lang) {
+  const locale = lang === 'en' ? 'en-US' : 'sl-SI';
+  return new Date(dateStr + 'T12:00:00Z').toLocaleDateString(locale, {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  });
+}
+
+function fmtTimeFmt(timeStr, lang) {
+  const [h, m] = timeStr.split(':').map(Number);
+  if (lang === 'en') {
+    const ap = h >= 12 ? 'PM' : 'AM';
+    const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+    return `${hr}:${String(m).padStart(2, '0')} ${ap}`;
+  }
+  return `${h}:${String(m).padStart(2, '0')}`;
+}
+
+function buildEmail({ name, serviceName, date, time, price, duration, lang }) {
+  const isSl   = lang !== 'en';
+  const L = isSl ? {
+    subject:  `Potrditev rezervacije — ${serviceName}`,
+    greeting: `Vidimo se kmalu, ${name}!`,
+    sub:      'Vaša rezervacija je potrjena. Spodaj so podrobnosti termina.',
+    rows: [
+      ['Storitev',  serviceName],
+      ['Datum',     fmtDateLong(date, 'sl')],
+      ['Čas',       fmtTimeFmt(time, 'sl')],
+      ['Trajanje',  `${duration} min`],
+      ['Cena',      `€${price}`],
+    ],
+    info:   'V primeru sprememb nas pokličite vsaj 2 uri pred terminom.',
+    footer: '© Luxury Barber Salon · Kjer tradicija sreča eleganco',
+  } : {
+    subject:  `Booking Confirmed — ${serviceName}`,
+    greeting: `See you soon, ${name}!`,
+    sub:      'Your appointment is confirmed. Here are the details.',
+    rows: [
+      ['Service',   serviceName],
+      ['Date',      fmtDateLong(date, 'en')],
+      ['Time',      fmtTimeFmt(time, 'en')],
+      ['Duration',  `${duration} min`],
+      ['Price',     `€${price}`],
+    ],
+    info:   'If you need to reschedule, please call us at least 2 hours in advance.',
+    footer: '© Luxury Barber Salon · Where Craft Meets Luxury',
+  };
+
+  const rows = L.rows.map(([label, value]) => `
+    <tr>
+      <td style="padding:13px 0;border-bottom:1px solid #1e1e1e;vertical-align:top;width:38%;">
+        <span style="font-family:Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#555;">${label}</span>
+      </td>
+      <td style="padding:13px 0 13px 16px;border-bottom:1px solid #1e1e1e;vertical-align:top;">
+        <span style="font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:300;color:#FAFAFA;">${value}</span>
+      </td>
+    </tr>`).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="${lang || 'sl'}">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0a0a0a;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:48px 20px;">
+  <tr><td align="center">
+  <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+    <!-- logo bar -->
+    <tr><td style="padding-bottom:32px;border-bottom:1px solid #1e1e1e;text-align:center;">
+      <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#C9A84C;">
+        ✦&nbsp;&nbsp;Luxury Barber Salon&nbsp;&nbsp;✦
+      </p>
+    </td></tr>
+
+    <!-- confirmed badge + greeting -->
+    <tr><td style="padding:36px 0 28px;text-align:center;">
+      <p style="margin:0 0 14px;font-family:Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#4ade80;">
+        ✓&nbsp; ${isSl ? 'Rezervacija potrjena' : 'Booking Confirmed'}
+      </p>
+      <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:300;color:#FAFAFA;line-height:1.25;">
+        ${L.greeting}
+      </h1>
+      <p style="margin:14px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.7;color:#666;">
+        ${L.sub}
+      </p>
+    </td></tr>
+
+    <!-- details card -->
+    <tr><td style="background:#111;border:1px solid #242424;border-top:2px solid #C9A84C;padding:8px 24px 4px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        ${rows}
+      </table>
+    </td></tr>
+
+    <!-- info note -->
+    <tr><td style="padding:24px 0 0;">
+      <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.7;color:#555;text-align:center;">
+        ${L.info}
+      </p>
+    </td></tr>
+
+    <!-- address -->
+    <tr><td style="padding:20px 0;text-align:center;">
+      <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.8;color:#444;">
+        123 Luxury Avenue, New York, NY<br>+1 (555) 000-0000
+      </p>
+    </td></tr>
+
+    <!-- footer -->
+    <tr><td style="border-top:1px solid #1a1a1a;padding:20px 0 0;text-align:center;">
+      <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2a2a2a;">
+        ${L.footer}
+      </p>
+    </td></tr>
+
+  </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  return { subject: L.subject, html };
+}
+
+async function sendConfirmationEmail({ name, email, serviceName, date, time, price, duration, lang }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[email] RESEND_API_KEY not set — skipping email');
+    return;
+  }
+  const resend = new Resend(apiKey);
+  const { subject, html } = buildEmail({ name, serviceName, date, time, price, duration, lang });
+  try {
+    await resend.emails.send({
+      from:    'onboarding@resend.dev',
+      to:      email,
+      subject,
+      html,
+    });
+    console.log(`[email] Sent confirmation to ${email}`);
+  } catch (err) {
+    // Email failure must never break the booking — log and continue
+    console.error('[email] Send failed:', err.message);
+  }
+}
+
 /* ── Handler ──────────────────────────────────────────────────────── */
 module.exports = async function handler(req, res) {
   // CORS (same-origin in production, but handy for local dev)
@@ -140,9 +286,9 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ date, slots });
     }
 
-    /* ── POST: create a booking event ───────────────────────────────── */
+    /* ── POST: create a booking event + send confirmation email ────── */
     if (req.method === 'POST') {
-      const { name, email, service, serviceName, date, time, price, duration } = req.body || {};
+      const { name, email, service, serviceName, date, time, price, duration, lang } = req.body || {};
 
       if (!name || !email || !date || !time || !serviceName) {
         return res.status(400).json({ error: 'Missing required fields: name, email, date, time, serviceName' });
@@ -201,6 +347,9 @@ module.exports = async function handler(req, res) {
           },
         },
       });
+
+      // Send confirmation email to the customer (non-blocking)
+      await sendConfirmationEmail({ name, email, serviceName, date, time, price, duration, lang });
 
       return res.status(201).json({
         eventId:   event.data.id,
