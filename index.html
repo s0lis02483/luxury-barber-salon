@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Barber Salon — Book Your Experience</title>
+<title>Luxury Barber Salon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & Variables ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --gold:       #C9A84C;
-  --gold-lt:    #E4C97B;
-  --black:      #0a0a0a;
-  --dark:       #141414;
-  --dark2:      #1a1a1a;
-  --dark3:      #232323;
-  --border:     #2a2a2a;
-  --text:       #FAFAFA;
-  --dim:        #888;
-  --muted:      #555;
-  --serif:      'Playfair Display', Georgia, serif;
-  --sans:       'Inter', system-ui, sans-serif;
-  --gold-grad:  linear-gradient(135deg, #C9A84C 0%, #E4C97B 50%, #C9A84C 100%);
+  --gold:      #C9A84C;
+  --gold-lt:   #E4C97B;
+  --black:     #0a0a0a;
+  --dark:      #141414;
+  --dark2:     #1a1a1a;
+  --dark3:     #232323;
+  --border:    #2a2a2a;
+  --text:      #FAFAFA;
+  --dim:       #888;
+  --muted:     #555;
+  --serif:     'Playfair Display', Georgia, serif;
+  --sans:      'Inter', system-ui, sans-serif;
+  --gold-grad: linear-gradient(135deg, #C9A84C 0%, #E4C97B 50%, #C9A84C 100%);
 }
 html { scroll-behavior: smooth; }
 body { font-family: var(--sans); background: var(--black); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
@@ -32,11 +31,10 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
-/* ── Typography ───────────────────────────────────────────────────── */
 .label { font-size: 10px; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
 .serif { font-family: var(--serif); }
 
-/* ── Buttons ──────────────────────────────────────────────────────── */
+/* ── Buttons ── */
 .btn-gold {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   background: var(--gold-grad); color: var(--black);
@@ -48,15 +46,6 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .btn-gold:hover { filter: brightness(1.1); }
 .btn-gold:active { filter: brightness(.93); }
 .btn-gold:disabled { opacity: .45; cursor: not-allowed; }
-.btn-outline {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: transparent; color: var(--gold);
-  font-family: var(--sans); font-size: 11px; font-weight: 500;
-  letter-spacing: .18em; text-transform: uppercase;
-  padding: 13px 28px; border: 1px solid rgba(201,168,76,.4); cursor: pointer;
-  transition: all .2s;
-}
-.btn-outline:hover { background: rgba(201,168,76,.07); border-color: var(--gold); }
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 6px;
   background: transparent; color: var(--muted);
@@ -75,18 +64,30 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 }
 .btn-danger:hover { background: rgba(248,113,113,.07); }
 
-/* ── Spinner ──────────────────────────────────────────────────────── */
 .spin {
   display: inline-block; width: 14px; height: 14px;
   border: 2px solid currentColor; border-top-color: transparent;
   border-radius: 50%; animation: spin .6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Divider ──────────────────────────────────────────────────────── */
 .gold-line { height: 1px; width: 48px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
 
-/* ── NAV ──────────────────────────────────────────────────────────── */
+/* ── Language switch ── */
+.lang-switch {
+  display: flex; align-items: center; gap: 0;
+  border: 1px solid rgba(201,168,76,.3); overflow: hidden;
+}
+.ls-btn {
+  background: transparent; border: none;
+  color: var(--muted); font-family: var(--sans); font-size: 10px;
+  font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+  padding: 6px 10px; cursor: pointer; transition: all .2s;
+}
+.ls-btn:hover { color: var(--gold); background: rgba(201,168,76,.06); }
+.ls-btn.active { color: var(--black); background: var(--gold-grad); font-weight: 600; }
+.ls-sep { color: rgba(201,168,76,.3); font-size: 11px; }
+
+/* ── NAV ── */
 #nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   height: 64px; padding: 0 40px;
@@ -100,6 +101,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
   color: var(--text); text-decoration: none;
 }
 .nav-logo .scissors { color: var(--gold); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
 .nav-links { display: flex; align-items: center; gap: 28px; }
 .nav-links button {
   font-size: 11px; font-family: var(--sans); letter-spacing: .14em;
@@ -109,7 +111,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .nav-links button:hover { color: var(--gold); }
 @media (max-width: 768px) { #nav { padding: 0 20px; } .nav-links { display: none; } }
 
-/* ── HERO ─────────────────────────────────────────────────────────── */
+/* ── HERO ── */
 #hero {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   text-align: center; padding: 100px 24px 80px; position: relative; overflow: hidden;
@@ -141,34 +143,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .scroll-cue span { font-size: 9px; letter-spacing: .3em; text-transform: uppercase; }
 .scroll-cue-line { width: 1px; height: 44px; background: linear-gradient(to bottom,var(--dim),transparent); }
 
-/* ── SERVICES PREVIEW ─────────────────────────────────────────────── */
-#services { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
-.section-head { text-align: center; margin-bottom: 56px; }
-.section-head .sep { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 14px; }
-.section-title { font-family: var(--serif); font-size: clamp(26px,4vw,40px); font-weight: 300; }
-.svc-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(270px,1fr)); gap: 1px; background: var(--dark2); }
-.svc-card {
-  background: var(--black); padding: 34px; cursor: pointer;
-  transition: background .2s; position: relative; overflow: hidden;
-}
-.svc-card::before {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 2px; background: var(--gold-grad);
-  transform: scaleX(0); transition: transform .3s ease; transform-origin: left;
-}
-.svc-card:hover { background: var(--dark); }
-.svc-card:hover::before { transform: scaleX(1); }
-.svc-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
-.svc-num { font-size: 10px; letter-spacing: .15em; color: var(--muted); }
-.svc-price { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--gold); }
-.svc-name { font-family: var(--serif); font-size: 19px; font-weight: 300; color: var(--text); margin-bottom: 10px; transition: color .2s; }
-.svc-card:hover .svc-name { color: rgba(201,168,76,.9); }
-.svc-desc { font-size: 12px; line-height: 1.7; color: var(--muted); margin-bottom: 18px; }
-.svc-foot { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.svc-foot .dot { display: inline-block; width: 4px; height: 4px; background: rgba(201,168,76,.4); border-radius: 50%; margin-right: 7px; vertical-align: middle; }
-@media (max-width: 640px) { #services { padding: 70px 20px; } .svc-card { padding: 22px; } }
-
-/* ── BOOKING SECTION ──────────────────────────────────────────────── */
+/* ── BOOKING SECTION ── */
 #book { padding: 100px 40px; border-top: 1px solid var(--dark2); }
 .book-layout { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
 .book-info { position: sticky; top: 80px; }
@@ -180,15 +155,17 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .book-meta { border-top: 1px solid var(--dark2); padding-top: 28px; display: flex; flex-direction: column; gap: 14px; }
 .book-meta-row { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--dim); }
 .book-meta-row svg { color: rgba(201,168,76,.5); flex-shrink: 0; }
-@media (max-width: 900px) { .book-layout { grid-template-columns: 1fr; gap: 48px; } .book-info { position: static; order: 2; } #wizard { order: 1; } #book { padding: 64px 20px; } }
+@media (max-width: 900px) {
+  .book-layout { grid-template-columns: 1fr; gap: 48px; }
+  .book-info { position: static; order: 2; }
+  #wizard { order: 1; }
+  #book { padding: 64px 20px; }
+}
 
-/* ── WIZARD ───────────────────────────────────────────────────────── */
+/* ── WIZARD ── */
 .wiz-steps { display: flex; align-items: center; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; }
 .wiz-step { display: flex; align-items: center; gap: 8px; }
-.wiz-num {
-  width: 21px; height: 21px; display: flex; align-items: center; justify-content: center;
-  font-size: 9px; border: 1px solid; transition: all .3s;
-}
+.wiz-num { width: 21px; height: 21px; display: flex; align-items: center; justify-content: center; font-size: 9px; border: 1px solid; transition: all .3s; }
 .wiz-num.active  { border-color: var(--gold); color: var(--gold); }
 .wiz-num.done    { border-color: var(--gold); background: var(--gold); color: var(--black); }
 .wiz-num.inactive{ border-color: var(--dark3); color: var(--dark3); }
@@ -199,14 +176,12 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .wiz-conn { height: 1px; width: 22px; transition: background .3s; }
 .wiz-conn.done    { background: rgba(201,168,76,.4); }
 .wiz-conn.inactive{ background: var(--dark3); }
-
 .step-anim { animation: stepIn .3s cubic-bezier(.16,1,.3,1) forwards; }
 @keyframes stepIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: translateX(0); } }
-
 .step-h { font-family: var(--serif); font-size: 23px; font-weight: 300; margin-bottom: 5px; }
 .step-sub { font-size: 12px; color: var(--muted); margin-bottom: 26px; }
 
-/* ── SERVICE CARDS (wizard) ───────────────────────────────────────── */
+/* ── Service pick ── */
 .svc-pick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
 @media (max-width: 560px) { .svc-pick-grid { grid-template-columns: 1fr; } }
 .svc-opt {
@@ -226,7 +201,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .svc-opt .oprice { font-size: 14px; color: var(--dim); transition: color .2s; }
 .svc-opt.sel .oprice { color: var(--gold); }
 
-/* ── DATE PICKER ──────────────────────────────────────────────────── */
+/* ── Date picker ── */
 .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .date-nav-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
 .date-nav-btns { display: flex; gap: 6px; }
@@ -251,7 +226,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .date-btn .dm { font-size: 9px; color: var(--muted); }
 .date-btn.sel .dd, .date-btn.sel .dn { color: var(--gold); }
 
-/* ── TIME SLOTS ───────────────────────────────────────────────────── */
+/* ── Time slots ── */
 .slots-lbl { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .slots-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; margin-bottom: 24px; }
 @media (max-width: 460px) { .slots-grid { grid-template-columns: repeat(3,1fr); } }
@@ -264,7 +239,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .slot.sel { border-color: rgba(201,168,76,.6); background: rgba(201,168,76,.08); color: var(--gold); }
 .slot:disabled { color: var(--dark3); text-decoration: line-through; cursor: not-allowed; border-color: rgba(42,42,42,.5); }
 
-/* ── BOOKING SUMMARY BAR ──────────────────────────────────────────── */
+/* ── Booking summary bar ── */
 .bsum {
   background: rgba(201,168,76,.05); border: 1px solid rgba(201,168,76,.18);
   padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
@@ -274,12 +249,12 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .bsum .bs-when { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .bsum .bs-price { font-size: 16px; font-weight: 300; }
 
-/* ── MINI SUMMARY ─────────────────────────────────────────────────── */
+/* ── Mini summary ── */
 .mini-sum { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; background: var(--dark); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 22px; }
 .msi-label { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
 .msi-val { font-size: 12px; color: var(--text); font-weight: 300; }
 
-/* ── FORM ─────────────────────────────────────────────────────────── */
+/* ── Form ── */
 .fgrp { margin-bottom: 18px; }
 .flbl { display: block; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
 .finp {
@@ -295,7 +270,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .form-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
 .global-err { background: rgba(248,113,113,.07); border: 1px solid rgba(248,113,113,.2); color: #f87171; font-size: 12px; padding: 11px 14px; margin-bottom: 14px; display: none; }
 
-/* ── CONFIRM SCREEN ───────────────────────────────────────────────── */
+/* ── Confirmation ── */
 .confirm-wrap { text-align: center; padding: 12px 0; }
 .confirm-icon { width: 64px; height: 64px; margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; }
 .confirm-icon svg { color: var(--gold); }
@@ -310,7 +285,7 @@ body { font-family: var(--sans); background: var(--black); color: var(--text); -
 .cr-lbl { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .cr-val { color: var(--text); font-weight: 300; }
 
-/* ── FOOTER ───────────────────────────────────────────────────────── */
+/* ── Footer ── */
 footer {
   border-top: 1px solid var(--dark2); padding: 32px 40px;
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
@@ -322,11 +297,8 @@ footer {
 .foot-admin:hover { color: rgba(201,168,76,.55); }
 @media (max-width: 600px) { footer { padding: 24px 20px; } }
 
-/* ── ADMIN OVERLAY ────────────────────────────────────────────────── */
-#admin-overlay {
-  position: fixed; inset: 0; z-index: 200; background: var(--black);
-  overflow-y: auto; display: none;
-}
+/* ── Admin overlay ── */
+#admin-overlay { position: fixed; inset: 0; z-index: 200; background: var(--black); overflow-y: auto; display: none; }
 #admin-overlay.open { display: block; animation: fadeIn .22s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .adm-hdr {
@@ -337,16 +309,10 @@ footer {
 .adm-badge { font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
 .adm-sep { width: 1px; height: 18px; background: var(--border); }
 .adm-htitle { font-family: var(--serif); font-size: 16px; font-weight: 300; }
-.adm-close {
-  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-  background: transparent; border: 1px solid var(--border); color: var(--dim);
-  cursor: pointer; font-size: 17px; line-height: 1; transition: all .2s;
-}
+.adm-close { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid var(--border); color: var(--dim); cursor: pointer; font-size: 17px; line-height: 1; transition: all .2s; }
 .adm-close:hover { border-color: #444; color: var(--text); }
 .adm-body { padding: 36px 40px; max-width: 1200px; margin: 0 auto; }
 @media (max-width: 640px) { .adm-hdr, .adm-body { padding-left: 20px; padding-right: 20px; } }
-
-/* Admin stats */
 .adm-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 28px; }
 @media (max-width: 600px) { .adm-stats { grid-template-columns: repeat(2,1fr); } }
 .stat-box { background: var(--dark); border: 1px solid var(--border); padding: 18px; }
@@ -354,60 +320,35 @@ footer {
 .stat-val { font-family: var(--serif); font-size: 28px; font-weight: 300; color: var(--text); }
 .stat-val.gold { color: var(--gold); }
 .stat-val.green { color: #4ade80; }
-
-/* Admin controls */
 .adm-ctrl { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
 .adm-search { flex: 1; min-width: 200px; position: relative; }
-.adm-search input {
-  width: 100%; background: transparent; border: 1px solid var(--border);
-  color: var(--text); font-family: var(--sans); font-size: 13px;
-  padding: 10px 14px 10px 36px; outline: none; transition: border-color .2s;
-}
+.adm-search input { width: 100%; background: transparent; border: 1px solid var(--border); color: var(--text); font-family: var(--sans); font-size: 13px; padding: 10px 14px 10px 36px; outline: none; transition: border-color .2s; }
 .adm-search input:focus { border-color: #444; }
 .adm-search input::placeholder { color: var(--muted); }
 .adm-search .si { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
 .flt-btns { display: flex; gap: 6px; }
-.flt-btn {
-  padding: 10px 14px; font-size: 10px; font-family: var(--sans);
-  letter-spacing: .14em; text-transform: uppercase; background: transparent;
-  border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all .2s;
-}
+.flt-btn { padding: 10px 14px; font-size: 10px; font-family: var(--sans); letter-spacing: .14em; text-transform: uppercase; background: transparent; border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all .2s; }
 .flt-btn:hover { border-color: #444; color: var(--text); }
 .flt-btn.on { border-color: rgba(201,168,76,.5); color: var(--gold); background: rgba(201,168,76,.05); }
-
-/* Admin table */
 .adm-tbl-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead th {
-  text-align: left; font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--muted); font-weight: 400; padding: 0 14px 12px 0;
-  border-bottom: 1px solid var(--border); white-space: nowrap;
-}
+thead th { text-align: left; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 400; padding: 0 14px 12px 0; border-bottom: 1px solid var(--border); white-space: nowrap; }
 tbody tr { border-bottom: 1px solid var(--dark2); transition: background .15s; }
 tbody tr:hover { background: rgba(255,255,255,.015); }
 tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
 .td-name { color: var(--text); font-weight: 300; }
 .td-email { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.status-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-  padding: 4px 10px; border: 1px solid;
-}
+.status-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid; }
 .status-badge.confirmed { border-color: rgba(74,222,128,.3); color: #4ade80; background: rgba(74,222,128,.05); }
 .status-badge.cancelled { border-color: var(--border); color: var(--muted); }
 .sdot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 .empty-st { text-align: center; padding: 70px 20px; color: var(--muted); font-size: 13px; }
 
-/* ── LOGIN MODAL ──────────────────────────────────────────────────── */
+/* ── Login modal ── */
 #login-modal { position: fixed; inset: 0; z-index: 300; display: none; align-items: center; justify-content: center; padding: 24px; }
 #login-modal.open { display: flex; }
 .modal-bg { position: absolute; inset: 0; background: rgba(0,0,0,.86); backdrop-filter: blur(10px); }
-.modal-box {
-  position: relative; z-index: 1; background: var(--dark);
-  border: 1px solid var(--border); border-top: 2px solid var(--gold);
-  padding: 40px; width: 100%; max-width: 380px;
-  animation: modalPop .25s cubic-bezier(.16,1,.3,1);
-}
+.modal-box { position: relative; z-index: 1; background: var(--dark); border: 1px solid var(--border); border-top: 2px solid var(--gold); padding: 40px; width: 100%; max-width: 380px; animation: modalPop .25s cubic-bezier(.16,1,.3,1); }
 @keyframes modalPop { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 .modal-logo { text-align: center; margin-bottom: 22px; color: var(--gold); }
 .modal-h { text-align: center; font-family: var(--serif); font-size: 22px; font-weight: 300; margin-bottom: 6px; }
@@ -417,14 +358,13 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
 .modal-back { display: block; text-align: center; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; margin-top: 18px; transition: color .2s; }
 .modal-back:hover { color: rgba(201,168,76,.7); }
 
-/* ── Reveal animation ─────────────────────────────────────────────── */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.vis { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- ══ NAV ══════════════════════════════════════════════════════════ -->
+<!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-logo" onclick="scrollTo({top:0,behavior:'smooth'});return false">
     <svg class="scissors" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -434,54 +374,61 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
     </svg>
     Luxury Barber
   </a>
-  <div class="nav-links">
-    <button onclick="$id('book').scrollIntoView({behavior:'smooth'})">Book</button>
-    <button onclick="openAdminLogin()">Admin</button>
+  <div class="nav-right">
+    <div class="nav-links">
+      <button id="nav-book-link" onclick="$id('book').scrollIntoView({behavior:'smooth'})"></button>
+      <button onclick="openAdminLogin()" id="nav-admin-link"></button>
+    </div>
+    <div class="lang-switch">
+      <button class="ls-btn active" id="ls-sl" onclick="setLang('sl')">SL</button>
+      <span class="ls-sep">|</span>
+      <button class="ls-btn" id="ls-en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="btn-gold" id="nav-book-btn" style="font-size:10px;padding:10px 18px;" onclick="$id('book').scrollIntoView({behavior:'smooth'})"></button>
   </div>
-  <button class="btn-gold" style="font-size:10px;padding:10px 18px;" onclick="$id('book').scrollIntoView({behavior:'smooth'})">Book Now</button>
 </nav>
 
-<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<!-- HERO -->
 <section id="hero">
   <div class="hero-pattern"></div>
   <div class="hero-glow"></div>
   <div class="hero-inner">
     <div class="hero-eyebrow">
       <div class="hero-line"></div>
-      <span class="label">Est. 2008</span>
+      <span class="label" id="h-est"></span>
       <div class="hero-line r"></div>
     </div>
-    <h1 class="hero-title">Where Craft<br><em>Meets Luxury</em></h1>
-    <p class="hero-desc">Premium grooming services delivered with precision and care. Every visit is an experience crafted exclusively for you.</p>
+    <h1 class="hero-title" id="h-title"></h1>
+    <p class="hero-desc" id="h-desc"></p>
     <div class="hero-ctas">
-      <button class="btn-gold" onclick="$id('book').scrollIntoView({behavior:'smooth'})">Reserve Your Seat</button>
+      <button class="btn-gold" id="h-cta" onclick="$id('book').scrollIntoView({behavior:'smooth'})"></button>
     </div>
     <div class="hero-proof">
-      <div><span class="stars">★★★★★</span>&nbsp; 5.0 on Google</div>
+      <div><span class="stars">★★★★★</span>&nbsp; <span id="h-proof1"></span></div>
       <div class="sep"></div>
-      <div>2,400+ satisfied clients</div>
+      <div id="h-proof2"></div>
     </div>
   </div>
   <div class="scroll-cue">
-    <span>Scroll</span>
+    <span id="h-scroll"></span>
     <div class="scroll-cue-line"></div>
   </div>
 </section>
 
-<!-- ══ BOOKING ════════════════════════════════════════════════════════ -->
+<!-- BOOKING -->
 <section id="book">
   <div class="book-layout">
     <div class="book-info reveal">
       <div class="book-eyebrow">
         <div class="bl"></div>
-        <span class="label">Reservations</span>
+        <span class="label" id="b-label"></span>
       </div>
-      <h2 class="book-title">Book Your<br><em>Experience</em></h2>
-      <p class="book-desc">Reserve your chair in minutes. Select your service, choose a time that suits you, and we'll handle the rest.</p>
+      <h2 class="book-title" id="b-title"></h2>
+      <p class="book-desc" id="b-desc"></p>
       <div class="book-meta">
         <div class="book-meta-row">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Mon – Sat &nbsp;·&nbsp; 9:00 AM – 7:00 PM
+          <span id="b-hours"></span>
         </div>
         <div class="book-meta-row">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -497,7 +444,7 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
   </div>
 </section>
 
-<!-- ══ FOOTER ════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
 <footer>
   <div class="foot-logo">
     <svg class="scissors" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -507,18 +454,18 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
     </svg>
     Luxury Barber Salon
   </div>
-  <p class="foot-copy">© 2024 · Where Craft Meets Luxury</p>
-  <button class="foot-admin" onclick="openAdminLogin()">Admin</button>
+  <p class="foot-copy" id="f-copy"></p>
+  <button class="foot-admin" onclick="openAdminLogin()" id="f-admin"></button>
 </footer>
 
-<!-- ══ ADMIN OVERLAY ═════════════════════════════════════════════════ -->
+<!-- ADMIN OVERLAY -->
 <div id="admin-overlay">
   <div class="adm-hdr">
     <div class="adm-hdr-l">
       <div style="width:18px;height:1px;background:var(--gold)"></div>
       <span class="adm-badge">Admin</span>
       <div class="adm-sep"></div>
-      <span class="adm-htitle serif">Booking Dashboard</span>
+      <span class="adm-htitle serif" id="adm-title"></span>
     </div>
     <button class="adm-close" onclick="closeAdmin()">✕</button>
   </div>
@@ -526,30 +473,26 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
     <div class="adm-stats" id="adm-stats"></div>
     <div class="adm-ctrl">
       <div class="adm-search">
-        <span class="si">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </span>
-        <input type="text" id="adm-q" placeholder="Search by name, email or service…" oninput="renderAdmTable()">
+        <span class="si"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input type="text" id="adm-q" oninput="renderAdmTable()">
       </div>
       <div class="flt-btns">
-        <button class="flt-btn on" id="f-all"       onclick="setFilter('all')">All</button>
-        <button class="flt-btn"    id="f-confirmed"  onclick="setFilter('confirmed')">Confirmed</button>
-        <button class="flt-btn"    id="f-cancelled"  onclick="setFilter('cancelled')">Cancelled</button>
+        <button class="flt-btn on" id="f-all"      onclick="setFilter('all')"      ></button>
+        <button class="flt-btn"   id="f-confirmed" onclick="setFilter('confirmed')"></button>
+        <button class="flt-btn"   id="f-cancelled" onclick="setFilter('cancelled')"></button>
       </div>
     </div>
     <div class="adm-tbl-wrap">
       <table>
-        <thead><tr>
-          <th>Client</th><th>Service</th><th>Date</th><th>Time</th><th>Price</th><th>Status</th><th></th>
-        </tr></thead>
+        <thead><tr id="adm-thead"></tr></thead>
         <tbody id="adm-tbody"></tbody>
       </table>
-      <div id="adm-empty" class="empty-st" style="display:none">No bookings found.</div>
+      <div id="adm-empty" class="empty-st" style="display:none"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ LOGIN MODAL ═══════════════════════════════════════════════════ -->
+<!-- LOGIN MODAL -->
 <div id="login-modal">
   <div class="modal-bg" onclick="closeLoginModal()"></div>
   <div class="modal-box">
@@ -560,36 +503,191 @@ tbody td { padding: 14px 14px 14px 0; color: var(--dim); white-space: nowrap; }
         <line x1="8.12" y1="8.12" x2="12" y2="12"/>
       </svg>
     </div>
-    <h2 class="modal-h">Admin Access</h2>
-    <p class="modal-sub">Enter your password to view the dashboard.</p>
+    <h2 class="modal-h" id="m-title"></h2>
+    <p class="modal-sub" id="m-sub"></p>
     <div class="fgrp">
-      <label class="flbl">Password</label>
+      <label class="flbl" id="m-pwlbl"></label>
       <input type="password" id="pw-inp" class="finp" placeholder="••••••••••" onkeydown="if(event.key==='Enter')loginAdmin()">
-      <div id="pw-err" class="ferr">Incorrect password. Please try again.</div>
+      <div id="pw-err" class="ferr"></div>
     </div>
-    <button class="btn-gold" style="width:100%;" onclick="loginAdmin()">Access Dashboard</button>
-    <div class="modal-hint">Demo password: <code>admin123</code></div>
-    <button class="modal-back" onclick="closeLoginModal()">← Back to site</button>
+    <button class="btn-gold" id="m-access" style="width:100%;" onclick="loginAdmin()"></button>
+    <div class="modal-hint"><span id="m-demolbl"></span> <code>admin123</code></div>
+    <button class="modal-back" id="m-back" onclick="closeLoginModal()"></button>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════
+   TRANSLATIONS
+═══════════════════════════════════ */
+const T = {
+  sl: {
+    navBook:    'Rezerviraj',
+    navAdmin:   'Admin',
+    est:        'Ustanovljeni 2008',
+    heroTitle:  'Kjer tradicija<br><em>sreča eleganco</em>',
+    heroDesc:   'Vrhunske moške frizerske storitve z natančnostjo in skrbjo. Vsak obisk je izkušnja, ustvarjena posebej za vas.',
+    heroCta:    'Rezervirajte termin',
+    proof1:     '5.0 na Googlu',
+    proof2:     '2.400+ zadovoljnih strank',
+    scroll:     'Pomakni se',
+    bLabel:     'Rezervacije',
+    bTitle:     'Rezervirajte<br><em>vašo izkušnjo</em>',
+    bDesc:      'Rezervirajte termin v minutah. Izberite storitev, izberite čas, ki vam ustreza, in za ostalo poskrbimo mi.',
+    bHours:     'Pon – Sob · 9:00 – 19:00',
+    footCopy:   '© 2024 · Kjer tradicija sreča eleganco',
+    footAdmin:  'Admin',
+    admTitle:   'Nadzorna plošča',
+    admSearch:  'Išči po imenu, e-naslovu ali storitvi…',
+    admAll:     'Vse',
+    admConf:    'Potrjene',
+    admCanc:    'Preklicane',
+    admEmpty:   'Ni rezervacij.',
+    admTh:      ['Stranka','Storitev','Datum','Čas','Cena','Status',''],
+    statTotal:  'Skupaj',
+    statConf:   'Potrjene',
+    statToday:  'Danes',
+    statRev:    'Prihodki',
+    stepLabels: ['Storitev','Datum in čas','Vaši podatki'],
+    chooseH:    'Izberite storitev',
+    chooseSub:  'Izberite izkušnjo, ki jo želite rezervirati.',
+    dateH:      'Izberite datum in čas',
+    dateSub:    'Odprto ponedeljek – sobota, 9:00 – 19:00.',
+    selDate:    'Izberite datum',
+    avail:      'Razpoložljivi termini',
+    detailsH:   'Vaši podatki',
+    detailsSub: 'Potrditev bomo poslali na vaš e-naslov.',
+    sName:      'Storitev',
+    sDate:      'Datum',
+    sTime:      'Čas',
+    nameLbl:    'Ime in priimek',
+    emailLbl:   'E-naslov',
+    namePh:     'Janez Novak',
+    emailPh:    'janez@primer.si',
+    errName:    'Prosimo, vnesite vaše ime in priimek.',
+    errEmail:   'Prosimo, vnesite veljaven e-naslov.',
+    errSlot:    'Ta termin je ravnokar zaseden — prosimo, izberite drug termin.',
+    btnCont:    'Naprej',
+    btnBack:    '← Nazaj',
+    btnConfirm: 'Potrdi rezervacijo',
+    confH:      'Rezervacija potrjena',
+    confSub:    'Potrditev je bila poslana na',
+    crName:     'Ime',
+    crSvc:      'Storitev',
+    crDate:     'Datum',
+    crTime:     'Čas',
+    crPrice:    'Cena',
+    bookAnother:'Rezerviraj nov termin',
+    mTitle:     'Dostop za skrbnike',
+    mSub:       'Vnesite geslo za dostop do nadzorne plošče.',
+    mPwLbl:     'Geslo',
+    mAccess:    'Dostop do nadzorne plošče',
+    mDemo:      'Demo geslo:',
+    mBack:      '← Nazaj na spletno stran',
+    mErrPw:     'Napačno geslo. Poskusite znova.',
+    cancelQ:    (name, date, time) => `Prekličete rezervacijo za ${name} dne ${date} ob ${time}?`,
+    services: [
+      { name:'Klasični striž',      desc:'Natančen striž s škarjami ali strižnikom po vaši meri, zaključen s toplo brisačo in stilističnim sredstvom.' },
+      { name:'Luksuzno britje',     desc:'Tradicionalno britje z ravnim brivnikom, oljem pred britjem, toplo peno in pomirjujočim balzamom po britju.' },
+      { name:'Striž in brada',      desc:'Celoten striž v kombinaciji z oblikovanjem in postrižbo brade — naša najbolj priljubljena signaturna izkušnja.' },
+      { name:'Vroča brisača',       desc:'Poživljajoča nega z vročo brisačo, ki odpre pore in globoko osvežuje kožo.' },
+      { name:'Vrhunski slog',       desc:'Ustvarjalno striženje in oblikovanje za kompleksne videze s celovitim posvetovanjem in vrhunsko zaključitvijo.' },
+      { name:'Barvanje in slog',    desc:'Celotno barvanje z razvijačem in tonerom, ki mu sledi natančen striž in luksuzno sušenje.' },
+    ],
+  },
+  en: {
+    navBook:    'Book Now',
+    navAdmin:   'Admin',
+    est:        'Est. 2008',
+    heroTitle:  'Where Craft<br><em>Meets Luxury</em>',
+    heroDesc:   'Premium grooming services delivered with precision and care. Every visit is an experience crafted exclusively for you.',
+    heroCta:    'Reserve Your Seat',
+    proof1:     '5.0 on Google',
+    proof2:     '2,400+ satisfied clients',
+    scroll:     'Scroll',
+    bLabel:     'Reservations',
+    bTitle:     'Book Your<br><em>Experience</em>',
+    bDesc:      'Reserve your chair in minutes. Select your service, choose a time that suits you, and we\'ll handle the rest.',
+    bHours:     'Mon – Sat · 9:00 AM – 7:00 PM',
+    footCopy:   '© 2024 · Where Craft Meets Luxury',
+    footAdmin:  'Admin',
+    admTitle:   'Booking Dashboard',
+    admSearch:  'Search by name, email or service…',
+    admAll:     'All',
+    admConf:    'Confirmed',
+    admCanc:    'Cancelled',
+    admEmpty:   'No bookings found.',
+    admTh:      ['Client','Service','Date','Time','Price','Status',''],
+    statTotal:  'Total Bookings',
+    statConf:   'Confirmed',
+    statToday:  'Today',
+    statRev:    'Revenue',
+    stepLabels: ['Service','Date & Time','Your Info'],
+    chooseH:    'Choose a Service',
+    chooseSub:  'Select the experience you\'d like to book.',
+    dateH:      'Select Date & Time',
+    dateSub:    'Open Monday – Saturday, 9 AM – 7 PM.',
+    selDate:    'Select Date',
+    avail:      'Available Times',
+    detailsH:   'Your Details',
+    detailsSub: 'We\'ll send a confirmation to your email.',
+    sName:      'Service',
+    sDate:      'Date',
+    sTime:      'Time',
+    nameLbl:    'Full Name',
+    emailLbl:   'Email Address',
+    namePh:     'John Smith',
+    emailPh:    'john@example.com',
+    errName:    'Please enter your full name.',
+    errEmail:   'Please enter a valid email address.',
+    errSlot:    'This slot was just taken — please go back and choose another time.',
+    btnCont:    'Continue',
+    btnBack:    '← Back',
+    btnConfirm: 'Confirm Booking',
+    confH:      'You\'re Confirmed',
+    confSub:    'A confirmation has been sent to',
+    crName:     'Name',
+    crSvc:      'Service',
+    crDate:     'Date',
+    crTime:     'Time',
+    crPrice:    'Price',
+    bookAnother:'Book Another Appointment',
+    mTitle:     'Admin Access',
+    mSub:       'Enter your password to view the dashboard.',
+    mPwLbl:     'Password',
+    mAccess:    'Access Dashboard',
+    mDemo:      'Demo password:',
+    mBack:      '← Back to site',
+    mErrPw:     'Incorrect password. Please try again.',
+    cancelQ:    (name, date, time) => `Cancel booking for ${name} on ${date} at ${time}?`,
+    services: [
+      { name:'Classic Cut',         desc:'Precision scissor or clipper cut tailored to your style, finished with a hot towel and styling product.' },
+      { name:'Luxury Shave',        desc:'Traditional straight-razor shave with pre-shave oil, warm lather, and a soothing post-shave balm.' },
+      { name:'Cut & Beard Combo',   desc:'Full haircut combined with a beard trim and shaping — our most popular signature experience.' },
+      { name:'Hot Towel Treatment', desc:'Revitalizing hot-towel facial treatment that opens pores and deeply refreshes the skin.' },
+      { name:'Premium Style',       desc:'Creative cut and style session for complex looks, with full consultation and premium finish.' },
+      { name:'Color & Style',       desc:'Full color service with developer and toner, followed by a precision cut and luxury blowout.' },
+    ],
+  },
+};
+
+/* ═══════════════════════════════════
+   BASE SERVICE DATA (lang-independent)
+═══════════════════════════════════ */
 const SERVICES = [
-  { id:'classic-cut',   name:'Classic Cut',          desc:'Precision scissor or clipper cut tailored to your style, finished with a hot towel and styling product.',      dur:45,  price:45  },
-  { id:'luxury-shave',  name:'Luxury Shave',          desc:'Traditional straight-razor shave with pre-shave oil, warm lather, and a soothing post-shave balm.',            dur:60,  price:55  },
-  { id:'cut-and-beard', name:'Cut & Beard Combo',     desc:'Full haircut combined with a beard trim and shaping — our most popular signature experience.',                  dur:75,  price:85  },
-  { id:'hot-towel',     name:'Hot Towel Treatment',   desc:'Revitalizing hot-towel facial treatment that opens pores and deeply refreshes the skin.',                       dur:30,  price:35  },
-  { id:'premium-style', name:'Premium Style',         desc:'Creative cut and style session for complex looks, with full consultation and premium finish.',                  dur:60,  price:75  },
-  { id:'color-style',   name:'Color & Style',         desc:'Full color service with developer and toner, followed by a precision cut and luxury blowout.',                  dur:120, price:120 },
+  { id:'classic-cut',   dur:45,  price:45  },
+  { id:'luxury-shave',  dur:60,  price:55  },
+  { id:'cut-and-beard', dur:75,  price:85  },
+  { id:'hot-towel',     dur:30,  price:35  },
+  { id:'premium-style', dur:60,  price:75  },
+  { id:'color-style',   dur:120, price:120 },
 ];
 
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    STATE
-═══════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 const S = {
+  lang:     'sl',
   step:     'service',
   service:  null,
   date:     null,
@@ -602,26 +700,87 @@ const S = {
   admFilt:  'all',
 };
 
-/* ═══════════════════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════════════════ */
 const $id = id => document.getElementById(id);
+const t   = ()  => T[S.lang];
 
+/* ═══════════════════════════════════
+   LANGUAGE
+═══════════════════════════════════ */
+function setLang(lang) {
+  S.lang = lang;
+  document.documentElement.lang = lang;
+  $id('ls-sl').classList.toggle('active', lang === 'sl');
+  $id('ls-en').classList.toggle('active', lang === 'en');
+  applyLang();
+  renderWiz();
+  renderAdmLang();
+}
+
+function applyLang() {
+  const l = t();
+  // Nav
+  $id('nav-book-link').textContent = l.navBook;
+  $id('nav-admin-link').textContent = l.navAdmin;
+  $id('nav-book-btn').textContent = l.navBook;
+  // Hero
+  $id('h-est').textContent   = l.est;
+  $id('h-title').innerHTML   = l.heroTitle;
+  $id('h-desc').textContent  = l.heroDesc;
+  $id('h-cta').textContent   = l.heroCta;
+  $id('h-proof1').textContent = l.proof1;
+  $id('h-proof2').textContent = l.proof2;
+  $id('h-scroll').textContent = l.scroll;
+  // Booking info
+  $id('b-label').textContent = l.bLabel;
+  $id('b-title').innerHTML   = l.bTitle;
+  $id('b-desc').textContent  = l.bDesc;
+  $id('b-hours').textContent = l.bHours;
+  // Footer
+  $id('f-copy').textContent  = l.footCopy;
+  $id('f-admin').textContent = l.footAdmin;
+  // Modal
+  $id('m-title').textContent  = l.mTitle;
+  $id('m-sub').textContent    = l.mSub;
+  $id('m-pwlbl').textContent  = l.mPwLbl;
+  $id('m-access').textContent = l.mAccess;
+  $id('m-demolbl').textContent = l.mDemo;
+  $id('m-back').textContent   = l.mBack;
+  $id('pw-err').textContent   = l.mErrPw;
+}
+
+function renderAdmLang() {
+  const l = t();
+  const qEl = $id('adm-q');
+  if (qEl) qEl.placeholder = l.admSearch;
+  $id('adm-title').textContent = l.admTitle;
+  $id('f-all').textContent       = l.admAll;
+  $id('f-confirmed').textContent = l.admConf;
+  $id('f-cancelled').textContent = l.admCanc;
+  $id('adm-empty').textContent   = l.admEmpty;
+  const thead = $id('adm-thead');
+  if (thead) thead.innerHTML = l.admTh.map(h => `<th>${h}</th>`).join('');
+}
+
+/* ═══════════════════════════════════
+   HELPERS
+═══════════════════════════════════ */
 function save() { localStorage.setItem('lbs', JSON.stringify(S.bookings)); }
-
-function uid() { return Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,6).toUpperCase(); }
+function uid()  { return Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,6).toUpperCase(); }
 
 function fmtDate(s) {
   if (!s) return '';
-  return new Date(s + 'T00:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  const loc = S.lang === 'sl' ? 'sl-SI' : 'en-US';
+  return new Date(s + 'T00:00:00').toLocaleDateString(loc, { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 }
 function shortDate(s) {
   if (!s) return '';
-  return new Date(s + 'T00:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  const loc = S.lang === 'sl' ? 'sl-SI' : 'en-US';
+  return new Date(s + 'T00:00:00').toLocaleDateString(loc, { month:'short', day:'numeric', year:'numeric' });
 }
-function fmtTime(t) {
-  if (!t) return '';
-  const [h, m] = t.split(':').map(Number);
+function fmtTime(tm) {
+  if (!tm) return '';
+  const [h, m] = tm.split(':').map(Number);
+  if (S.lang === 'sl') return `${h}:${String(m).padStart(2,'0')}`;
   const ap = h >= 12 ? 'PM' : 'AM';
   const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
   return `${hr}:${String(m).padStart(2,'0')} ${ap}`;
@@ -632,9 +791,7 @@ function allSlots() {
   for (let h = 9; h < 19; h++) {
     for (const m of [0, 30]) {
       const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-      const hr   = h > 12 ? h - 12 : h === 0 ? 12 : h;
-      const ap   = h >= 12 ? 'PM' : 'AM';
-      out.push({ time, label: `${hr}:${String(m).padStart(2,'0')} ${ap}` });
+      out.push({ time, label: fmtTime(time) });
     }
   }
   return out;
@@ -654,37 +811,41 @@ function weekDays() {
   return all.slice(S.wkOff * 6, S.wkOff * 6 + 6);
 }
 
-/* ═══════════════════════════════════════════════════════════
+function svcName(idx) { return t().services[idx]?.name || ''; }
+function svcDesc(idx) { return t().services[idx]?.desc || ''; }
+function svcByIdIdx(id) { return SERVICES.findIndex(s => s.id === id); }
+
+/* ═══════════════════════════════════
    WIZARD RENDER
-═══════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 const STEP_KEYS = ['service','datetime','details'];
 
 function stepIndicator() {
   const idx = STEP_KEYS.indexOf(S.step);
-  return `<div class="wiz-steps">${STEP_KEYS.map((k, i) => {
+  const labels = t().stepLabels;
+  return `<div class="wiz-steps">${STEP_KEYS.map((k,i) => {
     const cls = i < idx ? 'done' : i === idx ? 'active' : 'inactive';
-    const labels = ['Service','Date & Time','Your Info'];
     return `
       <div class="wiz-step">
         <div class="wiz-num ${cls}">${i < idx ? '✓' : i+1}</div>
         <span class="wiz-lbl ${cls}">${labels[i]}</span>
       </div>
-      ${i < STEP_KEYS.length-1 ? `<div class="wiz-conn ${i < idx ? 'done' : 'inactive'}"></div>` : ''}
-    `;
+      ${i < STEP_KEYS.length-1 ? `<div class="wiz-conn ${i < idx ? 'done' : 'inactive'}"></div>` : ''}`;
   }).join('')}</div>`;
 }
 
 function renderServiceStep() {
+  const l = t();
   return `<div class="step-anim">
     ${stepIndicator()}
-    <h2 class="step-h serif">Choose a Service</h2>
-    <p class="step-sub">Select the experience you'd like to book.</p>
+    <h2 class="step-h serif">${l.chooseH}</h2>
+    <p class="step-sub">${l.chooseSub}</p>
     <div class="svc-pick-grid">
-      ${SERVICES.map(sv => `
+      ${SERVICES.map((sv,i) => `
         <button class="svc-opt${S.service?.id === sv.id ? ' sel' : ''}" onclick="pickService('${sv.id}')">
           <div class="dot-sel"></div>
-          <div class="on">${sv.name}</div>
-          <div class="od">${sv.desc}</div>
+          <div class="on">${svcName(i)}</div>
+          <div class="od">${svcDesc(i)}</div>
           <div class="om">
             <span class="odur">⏱ ${sv.dur} min</span>
             <span class="oprice">$${sv.price}</span>
@@ -692,95 +853,89 @@ function renderServiceStep() {
         </button>`).join('')}
     </div>
     <div style="display:flex;justify-content:flex-end;">
-      <button class="btn-gold" onclick="goNext()" ${!S.service ? 'disabled' : ''}>Continue</button>
+      <button class="btn-gold" onclick="goNext()" ${!S.service ? 'disabled' : ''}>${l.btnCont}</button>
     </div>
   </div>`;
 }
 
 function renderDateTimeStep() {
+  const l = t();
   const days  = weekDays();
   const taken = S.date ? bookedOn(S.date) : new Set();
   const slots = allSlots();
+  const loc   = S.lang === 'sl' ? 'sl-SI' : 'en-US';
   return `<div class="step-anim">
     ${stepIndicator()}
-    <h2 class="step-h serif">Select Date & Time</h2>
-    <p class="step-sub">Open Monday – Saturday, 9 AM – 7 PM.</p>
-
+    <h2 class="step-h serif">${l.dateH}</h2>
+    <p class="step-sub">${l.dateSub}</p>
     <div class="date-nav">
-      <span class="date-nav-label">Select Date</span>
+      <span class="date-nav-label">${l.selDate}</span>
       <div class="date-nav-btns">
         <button class="date-nav-btn" onclick="prevWk()" ${S.wkOff===0?'disabled':''}>‹</button>
         <button class="date-nav-btn" onclick="nextWk()">›</button>
       </div>
     </div>
-
     <div class="date-grid">
       ${days.map(d => {
         const str = d.toISOString().split('T')[0];
-        const dow = d.toLocaleDateString('en-US',{weekday:'short'});
-        const mon = d.toLocaleDateString('en-US',{month:'short'});
-        return `
-          <button class="date-btn${S.date===str?' sel':''}" onclick="pickDate('${str}')">
-            <span class="dd">${dow}</span>
-            <span class="dn">${d.getDate()}</span>
-            <span class="dm">${mon}</span>
-          </button>`;
+        const dow = d.toLocaleDateString(loc,{weekday:'short'});
+        const mon = d.toLocaleDateString(loc,{month:'short'});
+        return `<button class="date-btn${S.date===str?' sel':''}" onclick="pickDate('${str}')">
+          <span class="dd">${dow}</span>
+          <span class="dn">${d.getDate()}</span>
+          <span class="dm">${mon}</span>
+        </button>`;
       }).join('')}
     </div>
-
     ${S.date ? `
-      <div class="slots-lbl">Available Times</div>
+      <div class="slots-lbl">${l.avail}</div>
       <div class="slots-grid">
         ${slots.map(sl => `
           <button class="slot${S.time===sl.time?' sel':''}" ${taken.has(sl.time)?'disabled':''} onclick="pickTime('${sl.time}')">
             ${sl.label}
           </button>`).join('')}
       </div>` : ''}
-
     ${S.service && S.date && S.time ? `
       <div class="bsum">
         <div>
-          <div class="bs-name">${S.service.name}</div>
+          <div class="bs-name">${svcName(svcByIdIdx(S.service.id))}</div>
           <div class="bs-when">${shortDate(S.date)} · ${fmtTime(S.time)}</div>
         </div>
         <div class="bs-price">$${S.service.price}</div>
       </div>` : ''}
-
     <div class="form-actions">
-      <button class="btn-ghost" onclick="goBack()">← Back</button>
-      <button class="btn-gold" onclick="goNext()" ${!S.date||!S.time?'disabled':''}>Continue</button>
+      <button class="btn-ghost" onclick="goBack()">${l.btnBack}</button>
+      <button class="btn-gold" onclick="goNext()" ${!S.date||!S.time?'disabled':''}>${l.btnCont}</button>
     </div>
   </div>`;
 }
 
 function renderDetailsStep() {
+  const l = t();
+  const idx = svcByIdIdx(S.service?.id);
   return `<div class="step-anim">
     ${stepIndicator()}
-    <h2 class="step-h serif">Your Details</h2>
-    <p class="step-sub">We'll send a confirmation to your email.</p>
-
+    <h2 class="step-h serif">${l.detailsH}</h2>
+    <p class="step-sub">${l.detailsSub}</p>
     <div class="mini-sum">
-      <div><div class="msi-label">Service</div><div class="msi-val">${S.service?.name}</div></div>
-      <div><div class="msi-label">Date</div><div class="msi-val">${shortDate(S.date)}</div></div>
-      <div><div class="msi-label">Time</div><div class="msi-val">${fmtTime(S.time)}</div></div>
+      <div><div class="msi-label">${l.sName}</div><div class="msi-val">${svcName(idx)}</div></div>
+      <div><div class="msi-label">${l.sDate}</div><div class="msi-val">${shortDate(S.date)}</div></div>
+      <div><div class="msi-label">${l.sTime}</div><div class="msi-val">${fmtTime(S.time)}</div></div>
     </div>
-
     <div id="gerr" class="global-err"></div>
-
     <div class="fgrp">
-      <label class="flbl" for="fn">Full Name</label>
-      <input id="fn" class="finp" type="text" placeholder="John Smith" value="${S.name}" oninput="S.name=this.value" autocomplete="name">
-      <div id="en" class="ferr">Please enter your full name.</div>
+      <label class="flbl" for="fn">${l.nameLbl}</label>
+      <input id="fn" class="finp" type="text" placeholder="${l.namePh}" value="${S.name}" oninput="S.name=this.value" autocomplete="name">
+      <div id="en" class="ferr">${l.errName}</div>
     </div>
     <div class="fgrp">
-      <label class="flbl" for="fe">Email Address</label>
-      <input id="fe" class="finp" type="email" placeholder="john@example.com" value="${S.email}" oninput="S.email=this.value" autocomplete="email">
-      <div id="ee" class="ferr">Please enter a valid email address.</div>
+      <label class="flbl" for="fe">${l.emailLbl}</label>
+      <input id="fe" class="finp" type="email" placeholder="${l.emailPh}" value="${S.email}" oninput="S.email=this.value" autocomplete="email">
+      <div id="ee" class="ferr">${l.errEmail}</div>
     </div>
-
     <div class="form-actions">
-      <button class="btn-ghost" onclick="goBack()">← Back</button>
-      <button class="btn-gold" id="sub-btn" onclick="submitBooking()">Confirm Booking</button>
+      <button class="btn-ghost" onclick="goBack()">${l.btnBack}</button>
+      <button class="btn-gold" id="sub-btn" onclick="submitBooking()">${l.btnConfirm}</button>
     </div>
   </div>`;
 }
@@ -788,6 +943,9 @@ function renderDetailsStep() {
 function renderConfirmStep() {
   const b = S.done;
   if (!b) return '';
+  const l   = t();
+  const idx = svcByIdIdx(b.service);
+  const nm  = idx >= 0 ? svcName(idx) : b.service;
   return `<div class="step-anim confirm-wrap">
     <div class="confirm-icon">
       <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
@@ -795,14 +953,14 @@ function renderConfirmStep() {
         <polyline class="check-path" points="22 4 12 14.01 9 11.01"/>
       </svg>
     </div>
-    <h2 class="confirm-h serif">You're Confirmed</h2>
-    <p class="confirm-sub">A confirmation has been sent to <span>${b.email}</span></p>
+    <h2 class="confirm-h serif">${l.confH}</h2>
+    <p class="confirm-sub">${l.confSub} <span>${b.email}</span></p>
     <div class="confirm-tbl">
-      ${[['Name',b.name],['Service',b.serviceName],['Date',fmtDate(b.date)],['Time',fmtTime(b.time)],['Price','$'+b.price]]
-        .map(([l,v]) => `<div class="confirm-row"><span class="cr-lbl">${l}</span><span class="cr-val">${v}</span></div>`)
+      ${[[l.crName,b.name],[l.crSvc,nm],[l.crDate,fmtDate(b.date)],[l.crTime,fmtTime(b.time)],[l.crPrice,'$'+b.price]]
+        .map(([lb,v]) => `<div class="confirm-row"><span class="cr-lbl">${lb}</span><span class="cr-val">${v}</span></div>`)
         .join('')}
     </div>
-    <button class="btn-gold" style="width:100%" onclick="resetWiz()">Book Another Appointment</button>
+    <button class="btn-gold" style="width:100%" onclick="resetWiz()">${l.bookAnother}</button>
   </div>`;
 }
 
@@ -817,29 +975,32 @@ function renderWiz() {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    WIZARD ACTIONS
-═══════════════════════════════════════════════════════════ */
-function pickService(id) { S.service = SERVICES.find(s => s.id === id); renderWiz(); }
-function pickDate(d)  { S.date = d; S.time = null; renderWiz(); }
-function pickTime(t)  { S.time = t; renderWiz(); }
-function prevWk()     { if (S.wkOff > 0) { S.wkOff--; renderWiz(); } }
-function nextWk()     { S.wkOff++; renderWiz(); }
+═══════════════════════════════════ */
+function pickService(id) {
+  const idx = SERVICES.findIndex(s => s.id === id);
+  S.service = { ...SERVICES[idx] };
+  renderWiz();
+}
+function pickDate(d) { S.date = d; S.time = null; renderWiz(); }
+function pickTime(tm) { S.time = tm; renderWiz(); }
+function prevWk() { if (S.wkOff > 0) { S.wkOff--; renderWiz(); } }
+function nextWk() { S.wkOff++; renderWiz(); }
 
 function goNext() {
-  if (S.step === 'service' && S.service)             { S.step = 'datetime'; renderWiz(); }
-  else if (S.step === 'datetime' && S.date && S.time){ S.step = 'details';  renderWiz(); }
+  if (S.step === 'service' && S.service)              { S.step = 'datetime'; renderWiz(); }
+  else if (S.step === 'datetime' && S.date && S.time) { S.step = 'details';  renderWiz(); }
 }
-
 function goBack() {
   if (S.step === 'datetime') { S.step = 'service';  renderWiz(); }
   if (S.step === 'details')  { S.step = 'datetime'; renderWiz(); }
 }
 
 function validate() {
+  const l = t();
   let ok = true;
-  const fn = $id('fn'), fe = $id('fe');
-  const en = $id('en'), ee = $id('ee');
+  const fn=$id('fn'), fe=$id('fe'), en=$id('en'), ee=$id('ee');
   if (!S.name.trim() || S.name.trim().length < 2) { en.style.display='block'; fn.classList.add('err'); ok=false; }
   else { en.style.display='none'; fn.classList.remove('err'); }
   if (!S.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)) { ee.style.display='block'; fe.classList.add('err'); ok=false; }
@@ -851,16 +1012,14 @@ function submitBooking() {
   if (!validate()) return;
   const conflict = S.bookings.find(b => b.date===S.date && b.time===S.time && b.status==='confirmed');
   if (conflict) {
-    const g = $id('gerr'); g.textContent = 'This slot was just taken — please go back and choose another time.'; g.style.display='block'; return;
+    const g=$id('gerr'); g.textContent=t().errSlot; g.style.display='block'; return;
   }
   const btn = $id('sub-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span>';
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
   setTimeout(() => {
     const booking = {
       id: uid(), name: S.name.trim(), email: S.email.trim().toLowerCase(),
-      service: S.service.id, serviceName: S.service.name,
-      date: S.date, time: S.time, price: S.service.price,
+      service: S.service.id, date: S.date, time: S.time, price: S.service.price,
       status: 'confirmed', createdAt: new Date().toISOString(),
     };
     S.bookings.push(booking); save();
@@ -873,9 +1032,9 @@ function resetWiz() {
   renderWiz();
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    ADMIN
-═══════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function openAdminLogin() {
   $id('login-modal').classList.add('open');
   setTimeout(() => $id('pw-inp')?.focus(), 80);
@@ -890,6 +1049,7 @@ function loginAdmin() {
     closeLoginModal();
     S.bookings = JSON.parse(localStorage.getItem('lbs') || '[]');
     renderAdmStats();
+    renderAdmLang();
     renderAdmTable();
     $id('admin-overlay').classList.add('open');
   } else {
@@ -906,48 +1066,59 @@ function setFilter(f) {
 }
 
 function renderAdmStats() {
-  const bs  = S.bookings;
+  const l    = t();
+  const bs   = S.bookings;
   const conf = bs.filter(b => b.status==='confirmed');
   const today = new Date().toISOString().split('T')[0];
   $id('adm-stats').innerHTML = [
-    { lbl:'Total Bookings', val: bs.length,                                     cls:'' },
-    { lbl:'Confirmed',      val: conf.length,                                   cls:'green' },
-    { lbl:'Today',          val: conf.filter(b=>b.date===today).length,         cls:'gold' },
-    { lbl:'Revenue',        val: '$'+conf.reduce((s,b)=>s+b.price,0),           cls:'gold' },
+    { lbl:l.statTotal, val:bs.length,                                   cls:''      },
+    { lbl:l.statConf,  val:conf.length,                                  cls:'green' },
+    { lbl:l.statToday, val:conf.filter(b=>b.date===today).length,        cls:'gold'  },
+    { lbl:l.statRev,   val:'$'+conf.reduce((s,b)=>s+b.price,0),          cls:'gold'  },
   ].map(x=>`<div class="stat-box"><div class="stat-lbl">${x.lbl}</div><div class="stat-val ${x.cls}">${x.val}</div></div>`).join('');
 }
 
 function renderAdmTable() {
+  const l   = t();
   const q   = ($id('adm-q')?.value||'').toLowerCase();
   const f   = S.admFilt;
   const rows = S.bookings
-    .filter(b => (f==='all'||b.status===f) && (!q||[b.name,b.email,b.serviceName].some(v=>v.toLowerCase().includes(q))))
+    .filter(b => {
+      const idx = svcByIdIdx(b.service);
+      const nm  = idx >= 0 ? svcName(idx) : b.service;
+      return (f==='all'||b.status===f) && (!q||[b.name,b.email,nm].some(v=>v.toLowerCase().includes(q)));
+    })
     .sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
-  const tbody = $id('adm-tbody'), empty = $id('adm-empty');
+
+  const tbody=$id('adm-tbody'), empty=$id('adm-empty');
   if (!rows.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-  empty.style.display = 'none';
-  tbody.innerHTML = rows.map(b=>`
-    <tr>
+  empty.style.display='none';
+  tbody.innerHTML = rows.map(b => {
+    const idx = svcByIdIdx(b.service);
+    const nm  = idx >= 0 ? svcName(idx) : b.service;
+    const statusLabel = b.status === 'confirmed' ? l.admConf : l.admCanc;
+    return `<tr>
       <td><div class="td-name">${b.name}</div><div class="td-email">${b.email}</div></td>
-      <td>${b.serviceName}</td>
+      <td>${nm}</td>
       <td>${shortDate(b.date)}</td>
       <td>${fmtTime(b.time)}</td>
       <td>$${b.price}</td>
-      <td><span class="status-badge ${b.status}"><span class="sdot"></span>${b.status}</span></td>
-      <td>${b.status==='confirmed'?`<button class="btn-danger" onclick="cancelBooking('${b.id}')">Cancel</button>`:''}</td>
-    </tr>`).join('');
+      <td><span class="status-badge ${b.status}"><span class="sdot"></span>${statusLabel}</span></td>
+      <td>${b.status==='confirmed'?`<button class="btn-danger" onclick="cancelBooking('${b.id}')">${l.admCanc}</button>`:''}</td>
+    </tr>`;
+  }).join('');
 }
 
 function cancelBooking(id) {
   const b = S.bookings.find(x=>x.id===id);
-  if (!b || !confirm(`Cancel booking for ${b.name} on ${shortDate(b.date)} at ${fmtTime(b.time)}?`)) return;
-  b.status = 'cancelled'; save();
+  if (!b || !confirm(t().cancelQ(b.name, shortDate(b.date), fmtTime(b.time)))) return;
+  b.status='cancelled'; save();
   renderAdmStats(); renderAdmTable();
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    REVEAL ON SCROLL
-═══════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 function initReveal() {
   const obs = new IntersectionObserver(
     entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }),
@@ -956,10 +1127,11 @@ function initReveal() {
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════
    INIT
-═══════════════════════════════════════════════════════════ */
+═══════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  applyLang();
   renderWiz();
   initReveal();
 });
