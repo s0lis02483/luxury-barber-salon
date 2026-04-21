@@ -567,6 +567,7 @@ const T = {
     errName:    'Prosimo, vnesite vaše ime in priimek.',
     errEmail:   'Prosimo, vnesite veljaven e-naslov.',
     errSlot:    'Ta termin je ravnokar zaseden — prosimo, izberite drug termin.',
+    errTaken:   'Ta termin je medtem zaseden. Izberite drug termin.',
     btnCont:    'Naprej',
     btnBack:    '← Nazaj',
     btnConfirm: 'Potrdi rezervacijo',
@@ -641,6 +642,7 @@ const T = {
     errName:    'Please enter your full name.',
     errEmail:   'Please enter a valid email address.',
     errSlot:    'This slot was just taken — please go back and choose another time.',
+    errTaken:   'That slot was just taken. Please choose a different time.',
     btnCont:    'Continue',
     btnBack:    '← Back',
     btnConfirm: 'Confirm Booking',
@@ -700,6 +702,7 @@ const S = {
   admFilt:  'all',
   calBusy:  {},        // { 'YYYY-MM-DD': ['HH:MM', ...] } — slots blocked on Google Calendar
   loadingSlots: false, // true while fetching availability from /api/calendar
+  slotError: false,    // true when server returns 409 (slot taken between select & confirm)
 };
 
 const $id = id => document.getElementById(id);
@@ -873,6 +876,7 @@ function renderDateTimeStep() {
     ${stepIndicator()}
     <h2 class="step-h serif">${l.dateH}</h2>
     <p class="step-sub">${l.dateSub}</p>
+    ${S.slotError ? `<div style="background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);color:#f87171;font-size:12px;padding:11px 14px;margin-bottom:16px;animation:stepIn .3s ease">${l.errTaken}</div>` : ''}
     <div class="date-nav">
       <span class="date-nav-label">${l.selDate}</span>
       <div class="date-nav-btns">
@@ -992,24 +996,23 @@ function pickService(id) {
   renderWiz();
 }
 async function pickDate(d) {
-  S.date = d; S.time = null;
-  // Fetch availability from Google Calendar if we haven't cached this date yet
-  if (!S.calBusy[d]) {
-    S.loadingSlots = true;
-    renderWiz(); // show spinner immediately
-    try {
-      const r = await fetch(`/api/calendar?date=${d}`);
-      if (r.ok) {
-        const data = await r.json();
-        S.calBusy[d] = (data.slots || []).filter(s => s.busy).map(s => s.time);
-      }
-    } catch (e) {
-      // API unavailable (local file open, env vars not set, etc.) — fall back to localStorage only
-      console.warn('[calendar] GET failed, using local data only:', e.message);
-      S.calBusy[d] = []; // cache empty so we don't retry on re-click
+  S.date = d; S.time = null; S.slotError = false;
+  // Always fetch fresh availability — never serve a stale cache.
+  // This ensures personal calendar blocks and last-second bookings are visible.
+  S.loadingSlots = true;
+  renderWiz(); // show spinner immediately
+  try {
+    const r = await fetch(`/api/calendar?date=${d}`);
+    if (r.ok) {
+      const data = await r.json();
+      S.calBusy[d] = (data.slots || []).filter(s => s.busy).map(s => s.time);
     }
-    S.loadingSlots = false;
+  } catch (e) {
+    // API unavailable (local file open, env vars not set) — fall back to localStorage only
+    console.warn('[calendar] GET failed, using local data only:', e.message);
+    if (!S.calBusy[d]) S.calBusy[d] = [];
   }
+  S.loadingSlots = false;
   renderWiz();
 }
 function pickTime(tm) { S.time = tm; renderWiz(); }
@@ -1054,7 +1057,8 @@ async function submitBooking() {
     status: 'confirmed', createdAt: new Date().toISOString(),
   };
 
-  // Create event on Google Calendar (non-blocking — if it fails we still confirm locally)
+  // Create event on Google Calendar — server performs a fresh freebusy check
+  // before writing, so a 409 means the slot was taken between select & confirm.
   try {
     const r = await fetch('/api/calendar', {
       method: 'POST',
@@ -1066,11 +1070,26 @@ async function submitBooking() {
         price: S.service.price, duration: S.service.dur,
       }),
     });
+
+    if (r.status === 409) {
+      // Slot was grabbed by someone else (or a personal event) between the
+      // moment the user picked it and the moment they hit Confirm.
+      // Send them back to the date/time step with a fresh calendar fetch.
+      btn.disabled = false; btn.textContent = t().btnConfirm;
+      delete S.calBusy[S.date]; // force re-fetch so they see current state
+      S.time = null;
+      S.step = 'datetime';
+      S.slotError = true;
+      renderWiz();
+      return; // stop — do NOT save the booking locally
+    }
+
     if (r.ok) {
       const data = await r.json();
-      booking.calEventId = data.eventId; // store for reference
+      booking.calEventId = data.eventId;
     }
   } catch (e) {
+    // Network/API error — still confirm locally so the user isn't left hanging
     console.warn('[calendar] POST failed, booking saved locally only:', e.message);
   }
 

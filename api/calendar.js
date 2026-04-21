@@ -148,7 +148,34 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Missing required fields: name, email, date, time, serviceName' });
       }
 
-      const dur     = Number(duration) || 60;
+      const dur    = Number(duration) || 60;
+      const offset = getOffset(date);
+
+      // ── Authoritative double-booking check ──────────────────────────
+      // Query freebusy for the exact slot duration before creating the
+      // event. This blocks both existing bookings AND personal calendar
+      // events that overlap the requested window.
+      const slotStart = localToDate(date, time, offset);
+      const slotEnd   = new Date(slotStart.getTime() + dur * 60 * 1000);
+
+      const fbCheck = await calendar.freebusy.query({
+        requestBody: {
+          timeMin:  slotStart.toISOString(),
+          timeMax:  slotEnd.toISOString(),
+          timeZone: TIMEZONE,
+          items:    [{ id: CALENDAR_ID }],
+        },
+      });
+
+      const alreadyBusy = fbCheck.data.calendars?.[CALENDAR_ID]?.busy || [];
+      if (alreadyBusy.length > 0) {
+        return res.status(409).json({
+          error:   'slot_taken',
+          message: 'This time slot is no longer available. Please choose a different time.',
+        });
+      }
+      // ─────────────────────────────────────────────────────────────────
+
       const endTime = addMinutes(time, dur);
 
       const event = await calendar.events.insert({
