@@ -142,12 +142,30 @@ function buildEmail({ name, serviceName, date, time, price, duration, lang }) {
     </tr>`).join('');
 
   const html = `<!DOCTYPE html>
-<html lang="${lang || 'sl'}">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#0a0a0a;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:48px 20px;">
-  <tr><td align="center">
-  <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+<html lang="${lang || 'sl'}" style="color-scheme:dark;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <style>
+    :root { color-scheme: dark; }
+    body, #body-wrap {
+      background-color: #0a0a0a !important;
+      background: #0a0a0a !important;
+    }
+    /* Prevent Gmail auto-dark-mode from inverting our already-dark design */
+    @media (prefers-color-scheme: dark) {
+      body, #body-wrap, table, td {
+        background-color: #0a0a0a !important;
+      }
+    }
+  </style>
+</head>
+<body id="body-wrap" style="margin:0;padding:0;background:#0a0a0a;background-color:#0a0a0a;" bgcolor="#0a0a0a">
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#0a0a0a" style="background:#0a0a0a;background-color:#0a0a0a;padding:48px 20px;">
+  <tr><td align="center" bgcolor="#0a0a0a" style="background-color:#0a0a0a;">
+  <table width="560" cellpadding="0" cellspacing="0" bgcolor="#0a0a0a" style="max-width:560px;width:100%;background-color:#0a0a0a;">
 
     <!-- logo bar -->
     <tr><td style="padding-bottom:32px;border-bottom:1px solid #1e1e1e;text-align:center;">
@@ -170,7 +188,7 @@ function buildEmail({ name, serviceName, date, time, price, duration, lang }) {
     </td></tr>
 
     <!-- details card -->
-    <tr><td style="background:#111;border:1px solid #242424;border-top:2px solid #C9A84C;padding:8px 24px 4px;">
+    <tr><td bgcolor="#111111" style="background:#111111;background-color:#111111;border:1px solid #242424;border-top:2px solid #C9A84C;padding:8px 24px 4px;">
       <table width="100%" cellpadding="0" cellspacing="0">
         ${rows}
       </table>
